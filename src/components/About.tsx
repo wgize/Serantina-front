@@ -1,27 +1,29 @@
-import { Heart, Award, Users, Leaf } from 'lucide-react'
+import { Heart, Award, Users, Leaf } from "lucide-react";
+import heroImg from "@/assets/hero.png";
 
 const values = [
   {
     icon: Heart,
-    title: 'Hecho con Amor',
-    desc: 'Cada receta es preparada con pasión y dedicación, usando ingredientes locales de Cusco y el Valle Sagrado.',
+    title: "Hecho con Amor",
+    desc: "Cada receta es preparada con pasión y dedicación, usando ingredientes locales de Cusco y el Valle Sagrado.",
   },
   {
     icon: Award,
-    title: 'Calidad Premium',
-    desc: 'Seleccionamos los mejores granos de café de altura, cultivados en las laderas de los Andes peruanos.',
+    title: "Calidad Premium",
+    desc: "Seleccionamos los mejores granos de café de altura, cultivados en las laderas de los Andes peruanos.",
   },
   {
     icon: Users,
-    title: 'Comunidad',
-    desc: 'Un espacio acogedor donde vecinos y viajeros se encuentran para compartir momentos especiales.',
+    title: "Comunidad",
+    desc: "Un espacio acogedor donde vecinos y viajeros se encuentran para compartir momentos especiales.",
   },
   {
     icon: Leaf,
-    title: 'Sostenible',
-    desc: 'Comprometidos con el medio ambiente, trabajamos con productores locales y practicas eco-amigables.',
+    title: "Sostenible",
+    desc: "Comprometidos con el medio ambiente, trabajamos con productores locales y practicas eco-amigables.",
   },
-]
+];
+
 
 export default function About() {
   return (
@@ -43,32 +45,37 @@ export default function About() {
             <div className="h-px w-12 bg-[#C8A96E]" />
           </div>
           <p className="max-w-2xl mx-auto text-[#6B3A2A]/70 text-base sm:text-lg leading-relaxed">
-            Nacimos en el corazón del Cusco con un sueño: crear un refugio donde la
-            tradición cafetalera andina se une a la calidez del hogar. Desde 2015,
-            hemos sido el rincón favorito de cusqueños y visitantes del mundo.
+            Nacimos en el corazón del Cusco con un sueño: crear un refugio donde
+            la tradición cafetalera andina se une a la calidez del hogar. Desde
+            2015, hemos sido el rincón favorito de cusqueños y visitantes del
+            mundo.
           </p>
         </div>
 
         {/* Contenido principal */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
-          {/* Imagen placeholder */}
+          {/* Imagen */}
           <div className="relative">
-            <div
-              className="w-full aspect-[4/3] rounded-2xl overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, #6B3A2A 0%, #3D1F0D 50%, #C8A96E 100%)',
-              }}
-            >
-              {/* Patrón decorativo andino */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white/30">
-                  <div className="text-8xl font-serif italic font-bold mb-2">LS</div>
-                  <div className="text-sm tracking-[0.4em] uppercase">La Serantina</div>
-                </div>
+            <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden">
+              {/* Imagen de fondo */}
+              <img
+                src={heroImg}
+                alt="La Sarentina"
+                className="w-full h-full object-cover"
+              />
+              {/* Overlay oscuro */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1C1008]/70 via-[#1C1008]/20 to-transparent" />
+              {/* Marca sobre la imagen */}
+              <div className="absolute bottom-6 left-6">
+                <p className="text-[#C8A96E] font-serif italic text-3xl font-bold drop-shadow">
+                  La Sarentina
+                </p>
+                <p className="text-[#F5F0E8]/70 text-xs tracking-[0.3em] uppercase mt-1">
+                  Cafetería & Pastelería · Cusco
+                </p>
               </div>
               {/* Elementos decorativos */}
-              <div className="absolute top-4 left-4 w-24 h-24 rounded-full border-2 border-[#C8A96E]/30" />
-              <div className="absolute bottom-4 right-4 w-16 h-16 rounded-full border border-[#C8A96E]/20" />
+              <div className="absolute top-4 right-4 w-16 h-16 rounded-full border border-[#C8A96E]/40" />
             </div>
             {/* Badge flotante */}
             <div className="absolute -bottom-6 -right-6 bg-[#1C1008] text-white rounded-2xl p-5 shadow-xl">
@@ -85,24 +92,28 @@ export default function About() {
               <span className="text-[#C8A96E]">en cada taza</span>
             </h3>
             <p className="text-[#6B3A2A]/70 leading-relaxed">
-              La Serantina nació del amor de una familia cusqueña por el café y la repostería
-              artesanal. Inspirados en los sabores del Valle Sagrado y las tradiciones andinas,
-              creamos un menú que celebra lo mejor de Cusco.
+              La Sarentina nació del amor de una familia cusqueña por el café y
+              la repostería artesanal. Inspirados en los sabores del Valle
+              Sagrado y las tradiciones andinas, creamos un menú que celebra lo
+              mejor de Cusco.
             </p>
             <p className="text-[#6B3A2A]/70 leading-relaxed">
-              Nuestros granos de café provienen de pequeños productores de altura, seleccionados
-              cuidadosamente para garantizar una taza perfecta. Cada pastel, cada sandwich y
-              cada bebida es preparado con ingredientes frescos y locales.
+              Nuestros granos de café provienen de pequeños productores de
+              altura, seleccionados cuidadosamente para garantizar una taza
+              perfecta. Cada pastel, cada sandwich y cada bebida es preparado
+              con ingredientes frescos y locales.
             </p>
             <div className="grid grid-cols-2 gap-6 pt-4">
               {[
-                { num: '50+', label: 'Variedades de café' },
-                { num: '30+', label: 'Delicias artesanales' },
-                { num: '200+', label: 'Clientes al día' },
-                { num: '4.9★', label: 'Calificación promedio' },
+                { num: "50+", label: "Variedades de café" },
+                { num: "30+", label: "Delicias artesanales" },
+                { num: "200+", label: "Clientes al día" },
+                { num: "4.9★", label: "Calificación promedio" },
               ].map((stat) => (
                 <div key={stat.label} className="border-l-2 border-[#C8A96E] pl-4">
-                  <div className="text-2xl font-bold text-[#1C1008]">{stat.num}</div>
+                  <div className="text-2xl font-bold text-[#1C1008]">
+                    {stat.num}
+                  </div>
                   <div className="text-sm text-[#6B3A2A]/60">{stat.label}</div>
                 </div>
               ))}
@@ -121,11 +132,13 @@ export default function About() {
                 <v.icon className="w-6 h-6 text-[#C8A96E]" />
               </div>
               <h4 className="font-semibold text-[#1C1008] mb-2">{v.title}</h4>
-              <p className="text-sm text-[#6B3A2A]/60 leading-relaxed">{v.desc}</p>
+              <p className="text-sm text-[#6B3A2A]/60 leading-relaxed">
+                {v.desc}
+              </p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

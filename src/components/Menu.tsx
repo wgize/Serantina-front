@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Coffee, Cake, Sandwich, Leaf } from "lucide-react";
+import { Coffee, Cake, Sandwich, Leaf, Search, X } from "lucide-react";
+import type { ElementType } from "react";
 import { cn } from "@/lib/utils";
 import { ProductModal } from "./ProductModal";
 import type { MenuItem, Category } from "@/types/cart";
+import { useSearch } from "@/contexts/SearchContext";
 
-const categories: { id: Category; label: string; icon: React.ElementType }[] = [
+const categories: { id: Category; label: string; icon: ElementType }[] = [
   { id: "cafes", label: "Cafés", icon: Coffee },
   { id: "bebidas", label: "Bebidas", icon: Leaf },
   { id: "pasteles", label: "Pasteles", icon: Cake },
@@ -21,7 +23,7 @@ const menuItems: Record<Category, MenuItem[]> = {
       image: "https://picsum.photos/400/300?random=1",
     },
     {
-      name: "Cappuccino Serantina",
+      name: "Cappuccino Sarentina",
       desc: "Espresso con leche vaporizada y arte latte especial de la casa.",
       price: "S/ 12",
       image: "https://picsum.photos/400/300?random=2",
@@ -155,7 +157,7 @@ const menuItems: Record<Category, MenuItem[]> = {
       image: "https://picsum.photos/400/300?random=21",
     },
     {
-      name: "Empanadas Serantina",
+      name: "Empanadas Sarentina",
       desc: "Empanadas horneadas rellenas de queso andino y ají amarillo.",
       price: "S/ 10",
       image: "https://picsum.photos/400/300?random=22",
@@ -182,10 +184,29 @@ const tagColors: Record<string, string> = {
   Especial: "bg-[#6B3A2A]/10 text-[#6B3A2A]",
 };
 
+type MenuItemWithCategory = MenuItem & { category: Category };
+
+// All items flattened for search
+const allItems: MenuItemWithCategory[] = (
+  Object.entries(menuItems) as [Category, MenuItem[]][]
+).flatMap(([category, items]) => items.map((item) => ({ ...item, category })));
+
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState<Category>("cafes");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const items = menuItems[activeCategory];
+  const { searchQuery, setSearchQuery } = useSearch();
+
+  const isSearching = searchQuery.trim().length > 0;
+
+  const displayItems: MenuItemWithCategory[] = isSearching
+    ? allItems.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
+      )
+    : menuItems[activeCategory].map((item) => ({ ...item, category: activeCategory }));
+
+  // Icon for a given category
+  const categoryIcon = (cat: Category) =>
+    categories.find((c) => c.id === cat)?.icon ?? Coffee;
 
   return (
     <section id="menu" className="py-24 bg-white">
@@ -209,81 +230,131 @@ export default function Menu() {
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((cat) => (
+        {/* Tabs o resultado de búsqueda */}
+        {isSearching ? (
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-3">
+              <Search className="w-4 h-4 text-[#C8A96E]" />
+              <span className="text-sm text-[#6B3A2A]/70">
+                {displayItems.length > 0 ? (
+                  <>
+                    <span className="font-semibold text-[#1C1008]">
+                      {displayItems.length}
+                    </span>{" "}
+                    resultado{displayItems.length !== 1 ? "s" : ""} para{" "}
+                    <span className="font-semibold text-[#C8A96E]">
+                      "{searchQuery}"
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Sin resultados para{" "}
+                    <span className="font-semibold text-[#C8A96E]">
+                      "{searchQuery}"
+                    </span>
+                  </>
+                )}
+              </span>
+            </div>
             <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={cn(
-                "flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
-                activeCategory === cat.id
-                  ? "bg-[#1C1008] text-[#C8A96E] shadow-lg"
-                  : "bg-[#F5F0E8] text-[#6B3A2A] hover:bg-[#C8A96E]/15",
-              )}
+              onClick={() => setSearchQuery("")}
+              className="flex items-center gap-1.5 text-xs text-[#6B3A2A]/50 hover:text-[#C8A96E] transition-colors"
             >
-              <cat.icon className="w-4 h-4" />
-              {cat.label}
+              <X className="w-3.5 h-3.5" />
+              Limpiar
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={cn(
+                  "flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                  activeCategory === cat.id
+                    ? "bg-[#1C1008] text-[#C8A96E] shadow-lg"
+                    : "bg-[#F5F0E8] text-[#6B3A2A] hover:bg-[#C8A96E]/15",
+                )}
+              >
+                <cat.icon className="w-4 h-4" />
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Items grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <div
-              key={item.name}
-              onClick={() => setSelectedItem(item)}
-              className="group bg-[#FBF8F3] rounded-2xl p-6 border border-[#C8A96E]/10 hover:border-[#C8A96E]/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
-            >
-              {/* Image */}
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-32 object-cover rounded-xl mb-4 group-hover:scale-105 transition-transform duration-300"
-              />
+        {displayItems.length === 0 ? (
+          <div className="text-center py-16">
+            <Search className="w-10 h-10 text-[#C8A96E]/30 mx-auto mb-4" />
+            <p className="text-[#6B3A2A]/50 text-sm">
+              No encontramos productos con ese nombre.
+            </p>
+            <p className="text-[#6B3A2A]/35 text-xs mt-1">
+              Intenta con otro término.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayItems.map((item) => {
+              const cat = "category" in item ? item.category : activeCategory;
+              const Icon = categoryIcon(cat);
+              return (
+                <div
+                  key={item.name}
+                  onClick={() => setSelectedItem(item)}
+                  className="group bg-[#FBF8F3] rounded-2xl p-6 border border-[#C8A96E]/10 hover:border-[#C8A96E]/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-32 object-cover rounded-xl mb-4 group-hover:scale-105 transition-transform duration-300"
+                  />
 
-              {/* Decoración superior */}
-              <div className="w-10 h-10 rounded-xl bg-[#C8A96E]/10 flex items-center justify-center mb-4 group-hover:bg-[#C8A96E]/20 transition-colors">
-                {(() => {
-                  const Icon =
-                    categories.find((c) => c.id === activeCategory)?.icon ||
-                    Coffee;
-                  return <Icon className="w-5 h-5 text-[#C8A96E]" />;
-                })()}
-              </div>
+                  <div className="w-10 h-10 rounded-xl bg-[#C8A96E]/10 flex items-center justify-center mb-4 group-hover:bg-[#C8A96E]/20 transition-colors">
+                    <Icon className="w-5 h-5 text-[#C8A96E]" />
+                  </div>
 
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <h4 className="font-semibold text-[#1C1008] text-base leading-tight">
-                  {item.name}
-                </h4>
-                {item.tag && (
-                  <span
-                    className={cn(
-                      "text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap",
-                      tagColors[item.tag],
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h4 className="font-semibold text-[#1C1008] text-base leading-tight">
+                      {item.name}
+                    </h4>
+                    {item.tag && (
+                      <span
+                        className={cn(
+                          "text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap",
+                          tagColors[item.tag],
+                        )}
+                      >
+                        {item.tag}
+                      </span>
                     )}
-                  >
-                    {item.tag}
-                  </span>
-                )}
-              </div>
+                  </div>
 
-              <p className="text-sm text-[#6B3A2A]/60 leading-relaxed mb-4">
-                {item.desc}
-              </p>
+                  {isSearching && "category" in item && (
+                    <span className="inline-block text-[0.65rem] text-[#C8A96E]/60 uppercase tracking-wider mb-1 font-medium">
+                      {categories.find((c) => c.id === item.category)?.label}
+                    </span>
+                  )}
 
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-bold text-[#C8A96E]">
-                  {item.price}
-                </span>
-                <span className="text-xs text-[#6B3A2A]/50 group-hover:text-[#C8A96E] transition-colors font-medium">
-                  Ver opciones →
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <p className="text-sm text-[#6B3A2A]/60 leading-relaxed mb-4">
+                    {item.desc}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-[#C8A96E]">
+                      {item.price}
+                    </span>
+                    <span className="text-xs text-[#6B3A2A]/50 group-hover:text-[#C8A96E] transition-colors font-medium">
+                      Ver opciones →
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center mt-12">
@@ -301,7 +372,7 @@ export default function Menu() {
 
       {/* Product Modal */}
       <ProductModal
-        item={selectedItem}
+        item={selectedItem!}
         isOpen={!!selectedItem}
         onClose={() => setSelectedItem(null)}
       />

@@ -88,3 +88,30 @@ html {
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
+
+/* Animated logo — steam */
+@keyframes steamRise {
+  0%   { opacity: 0; transform: translateY(0) scaleX(1); }
+  20%  { opacity: 0.65; }
+  100% { opacity: 0; transform: translateY(-20px) scaleX(1.25); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { opacity: 0.72; }
+  50%       { opacity: 1; }
+}
+
+.animate-steam   { animation: steamRise 2.6s ease-out infinite; }
+.animate-steam-d1 { animation: steamRise 2.6s ease-out infinite 0.88s; }
+.animate-steam-d2 { animation: steamRise 2.6s ease-out infinite 1.75s; }
+.animate-logo-glow { animation: logoGlow 4s ease-in-out infinite; }
+
+/* Cart bounce al agregar producto */
+@keyframes cartBounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.45); }
+  55%  { transform: scale(0.88); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.animate-cart-bounce { animation: cartBounce 0.55s ease-in-out; }

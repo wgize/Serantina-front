@@ -1,5 +1,6 @@
 import "./App.css";
 import { CartProvider } from "./contexts/CartContext";
+import { SearchProvider } from "./contexts/SearchContext";
 import { Cart } from "./components/Cart";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -11,16 +12,18 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <CartProvider>
-      <Navbar />
-      <Hero />
-      <About />
-      <Menu />
-      <Atmosphere />
-      <Contact />
-      <Footer />
-      <Cart />
-    </CartProvider>
+    <SearchProvider>
+      <CartProvider>
+        <Navbar />
+        <Hero />
+        <About />
+        <Menu />
+        <Atmosphere />
+        <Contact />
+        <Footer />
+        <Cart />
+      </CartProvider>
+    </SearchProvider>
   );
 }
 

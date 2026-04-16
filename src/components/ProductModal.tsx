@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Plus, Minus } from "lucide-react";
+import { X, Plus, Minus, Check } from "lucide-react";
 import type { MenuItem } from "@/types/cart";
 import { useCart } from "@/hooks/useCart";
 
@@ -19,10 +19,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const { dispatch } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(sizes[1]); // Mediano por defecto
-  const [selectedCustomizations, setSelectedCustomizations] = useState<
-    string[]
-  >([]);
+  const [selectedSize, setSelectedSize] = useState(sizes[1]);
+  const [selectedCustomizations, setSelectedCustomizations] = useState<string[]>([]);
+  const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
     dispatch({
@@ -34,12 +33,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         customizations: selectedCustomizations,
       },
     });
-    dispatch({ type: "OPEN_CART" });
-    onClose();
-    // Reset form
-    setQuantity(1);
-    setSelectedSize(sizes[1]);
-    setSelectedCustomizations([]);
+    setAdded(true);
+    setTimeout(() => {
+      setAdded(false);
+      onClose();
+      setQuantity(1);
+      setSelectedSize(sizes[1]);
+      setSelectedCustomizations([]);
+    }, 900);
   };
 
   const toggleCustomization = (customization: string) => {
@@ -53,8 +54,14 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
@@ -158,9 +165,21 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            className="w-full bg-[#1C1008] text-[#C8A96E] py-3 px-6 rounded-xl font-medium hover:bg-[#2A1810] transition-colors"
+            disabled={added}
+            className={`w-full py-3 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+              added
+                ? "bg-[#C8A96E]/15 text-[#C8A96E] border border-[#C8A96E]/40 scale-95 cursor-default"
+                : "bg-[#1C1008] text-[#C8A96E] hover:bg-[#2A1810]"
+            }`}
           >
-            Agregar al Carrito - {item.price}
+            {added ? (
+              <>
+                <Check className="w-4 h-4" />
+                ¡Agregado!
+              </>
+            ) : (
+              <>Agregar al Carrito — {item.price}</>
+            )}
           </button>
         </div>
       </div>
