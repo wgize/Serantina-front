@@ -92,31 +92,31 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 sm:p-8"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white w-full max-w-lg rounded-2xl sm:rounded-3xl max-h-[85vh] overflow-y-auto shadow-2xl border border-[#C8A96E]/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Header */}
-          <div className="flex items-start justify-between mb-4 gap-3">
+          <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2">
             <div>
-              <h3 className="text-xl font-serif font-bold text-[#1C1008] leading-tight">
+              <h3 className="text-base sm:text-xl font-serif font-bold text-[#1C1008] leading-tight">
                 {item.name}
               </h3>
               {item.tag && (
-                <span className="inline-block mt-1 text-xs font-medium px-2.5 py-0.5 rounded-full bg-[#C8A96E]/20 text-[#8B6914]">
+                <span className="inline-block mt-1 text-[0.65rem] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-[#C8A96E]/20 text-[#8B6914]">
                   {item.tag}
                 </span>
               )}
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+              className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
@@ -124,43 +124,41 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           <img
             src={item.image}
             alt={item.name}
-            className="w-full h-48 object-cover rounded-xl mb-4"
+            className="w-full h-36 sm:h-48 object-cover rounded-xl mb-3 sm:mb-4"
           />
 
           {/* Description */}
-          <p className="text-[#6B3A2A]/70 text-sm mb-5">{item.desc}</p>
+          <p className="text-[#6B3A2A]/70 text-xs sm:text-sm mb-4 sm:mb-5">{item.desc}</p>
 
           {/* Precio dinámico */}
-          <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-bold text-[#C8A96E]">{activePrice}</span>
+          <div className="flex items-baseline gap-2 mb-4 sm:mb-6">
+            <span className="text-xl sm:text-2xl font-bold text-[#C8A96E]">{activePrice}</span>
             {hasSizes && selectedSize && selectedSize.price !== item.price && (
-              <span className="text-sm text-[#6B3A2A]/40 line-through">{item.price}</span>
+              <span className="text-xs sm:text-sm text-[#6B3A2A]/40 line-through">{item.price}</span>
             )}
           </div>
 
-          {/* Selector de tamaño — solo si el producto lo tiene */}
+          {/* Selector de tamaño */}
           {hasSizes && (
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-[#1C1008] mb-3">
+            <div className="mb-4 sm:mb-6">
+              <label className="block text-xs sm:text-sm font-semibold text-[#1C1008] mb-2 sm:mb-3">
                 Tamaño
               </label>
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 {item.sizes!.map((size) => {
                   const isSelected = selectedSize?.label === size.label;
                   return (
                     <button
                       key={size.label}
                       onClick={() => setSelectedSize(size)}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border text-sm transition-all duration-150 ${
+                      className={`w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-xl border text-xs sm:text-sm transition-all duration-150 ${
                         isSelected
                           ? "border-[#C8A96E] bg-[#C8A96E]/8 text-[#1C1008]"
                           : "border-[#C8A96E]/15 bg-[#FBF8F3] text-[#6B3A2A] hover:border-[#C8A96E]/40"
                       }`}
                     >
                       <span className={isSelected ? "font-medium" : ""}>{size.label}</span>
-                      <span
-                        className={`font-bold ${isSelected ? "text-[#C8A96E]" : "text-[#6B3A2A]/60"}`}
-                      >
+                      <span className={`font-bold ${isSelected ? "text-[#C8A96E]" : "text-[#6B3A2A]/60"}`}>
                         {size.price}
                       </span>
                     </button>
@@ -171,68 +169,63 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           )}
 
           {/* Cantidad */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-[#1C1008] mb-3">
+          <div className="mb-4 sm:mb-6">
+            <label className="block text-xs sm:text-sm font-semibold text-[#1C1008] mb-2 sm:mb-3">
               Cantidad
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-2 border border-[#C8A96E]/20 rounded-full hover:bg-[#C8A96E]/8 transition-colors"
+                className="p-1.5 sm:p-2 border border-[#C8A96E]/20 rounded-full hover:bg-[#C8A96E]/8 transition-colors"
               >
-                <Minus className="w-4 h-4 text-[#6B3A2A]" />
+                <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6B3A2A]" />
               </button>
-              <span className="text-lg font-semibold text-[#1C1008] w-8 text-center">
+              <span className="text-base sm:text-lg font-semibold text-[#1C1008] w-7 sm:w-8 text-center">
                 {quantity}
               </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="p-2 border border-[#C8A96E]/20 rounded-full hover:bg-[#C8A96E]/8 transition-colors"
+                className="p-1.5 sm:p-2 border border-[#C8A96E]/20 rounded-full hover:bg-[#C8A96E]/8 transition-colors"
               >
-                <Plus className="w-4 h-4 text-[#6B3A2A]" />
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6B3A2A]" />
               </button>
               {quantity > 1 && (
-                <span className="text-sm text-[#6B3A2A]/50 ml-1">
-                  = {/* subtotal visual */}
+                <span className="text-xs sm:text-sm text-[#6B3A2A]/50">
+                  ={" "}
                   <span className="font-medium text-[#C8A96E]">
-                    S/{" "}
-                    {(
-                      parseFloat(activePrice.replace("S/ ", "")) * quantity
-                    ).toFixed(2)}
+                    S/ {(parseFloat(activePrice.replace("S/ ", "")) * quantity).toFixed(2)}
                   </span>
                 </span>
               )}
             </div>
           </div>
 
-          {/* Personalizaciones — solo si el producto las tiene */}
+          {/* Personalizaciones */}
           {hasCustomizations && (
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-[#1C1008] mb-3">
-                Personalizaciones
-                <span className="text-xs font-normal text-[#6B3A2A]/40 ml-2">
-                  (opcional)
-                </span>
+            <div className="mb-4 sm:mb-6">
+              <label className="block text-xs sm:text-sm font-semibold text-[#1C1008] mb-2 sm:mb-3">
+                Personalizaciones{" "}
+                <span className="font-normal text-[#6B3A2A]/40">(opcional)</span>
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                 {item.customizationOptions!.map((opt) => {
                   const checked = selectedCustomizations.includes(opt);
                   return (
                     <button
                       key={opt}
                       onClick={() => toggleCustomization(opt)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-150 text-left ${
+                      className={`flex items-center gap-2 px-2.5 sm:px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-150 text-left ${
                         checked
                           ? "border-[#C8A96E] bg-[#C8A96E]/10 text-[#8B6914]"
                           : "border-[#C8A96E]/15 bg-[#FBF8F3] text-[#6B3A2A]/70 hover:border-[#C8A96E]/35"
                       }`}
                     >
                       <span
-                        className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${
+                        className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded border flex-shrink-0 flex items-center justify-center ${
                           checked ? "bg-[#C8A96E] border-[#C8A96E]" : "border-[#C8A96E]/30"
                         }`}
                       >
-                        {checked && <Check className="w-2.5 h-2.5 text-white" />}
+                        {checked && <Check className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" />}
                       </span>
                       {opt}
                     </button>
@@ -246,7 +239,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
           <button
             onClick={handleAddToCart}
             disabled={added}
-            className={`w-full py-3 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl text-sm sm:text-base font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
               added
                 ? "bg-[#C8A96E]/15 text-[#C8A96E] border border-[#C8A96E]/40 scale-95 cursor-default"
                 : "bg-[#1C1008] text-[#C8A96E] hover:bg-[#2A1810]"

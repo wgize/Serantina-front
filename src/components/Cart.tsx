@@ -65,11 +65,11 @@ export const Cart: React.FC = () => {
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/50 z-50 flex justify-end"
+        className="fixed inset-0 bg-black/55 z-50 flex items-center justify-end p-4 sm:p-6"
         onClick={() => dispatch({ type: "CLOSE_CART" })}
       >
         <div
-          className="bg-white w-full max-w-md h-full overflow-y-auto"
+          className="bg-white w-full max-w-xs sm:max-w-sm max-h-full rounded-2xl overflow-y-auto shadow-2xl border border-[#C8A96E]/10"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6">
