@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Coffee, Cake, Sandwich, Leaf, Search, X } from "lucide-react";
+import {
+  Coffee,
+  Cake,
+  Sandwich,
+  Leaf,
+  Search,
+  X,
+  Star,
+  Wheat,
+} from "lucide-react";
 import type { ElementType } from "react";
 import { cn } from "@/lib/utils";
 import { ProductModal } from "./ProductModal";
@@ -10,183 +19,475 @@ import { useSearch } from "@/contexts/SearchContext";
 const categories: { id: Category; label: string; icon: ElementType }[] = [
   { id: "cafes", label: "Cafés", icon: Coffee },
   { id: "bebidas", label: "Bebidas", icon: Leaf },
-  { id: "pasteles", label: "Pasteles", icon: Cake },
-  { id: "salados", label: "Salados", icon: Sandwich },
+  { id: "porciones", label: "Porciones", icon: Cake },
+  { id: "hojaldres", label: "Hojaldres", icon: Wheat },
+  { id: "salados", label: "Empanadas", icon: Sandwich },
+  { id: "tortas", label: "Tortas", icon: Star },
 ];
 
+// ─── Opciones de personalización por tipo ───────────────────────────────────
+const optCafe = ["Sin azúcar", "Extra leche", "Descafeinado", "Leche vegetal"];
+const optCaliente = ["Sin azúcar", "Extra caliente", "Tibio"];
+const optJugo = ["Sin colar", "Solo colado", "Con leche (+S/ 1)", "Sin azúcar"];
+const optPorcion = ["Con cubiertos", "Para llevar", "Porción extra de crema"];
+const optHojaldre = ["Para llevar", "Con azúcar glass extra"];
+const optPye = ["Para llevar", "Con manjar extra", "Con helado"];
+const optAlfajor = ["Para llevar", "En caja de regalo"];
+const optEmpanada = ["Con ají", "Con limón", "Para llevar"];
+const optTorta = [
+  "Con dedicatoria",
+  "Con decoración temática",
+  "Para llevar",
+  "Con cubiertos",
+];
+
+// ─── Datos del menú ──────────────────────────────────────────────────────────
 const menuItems: Record<Category, MenuItem[]> = {
+  // ── Cafés y Barismo ────────────────────────────────────────────────────────
   cafes: [
     {
-      name: "Espresso Andino",
-      desc: "Doble shot de café cusqueño de altura, intenso y aromático.",
-      price: "S/ 8",
+      name: "Café Pasado",
+      desc: "Café filtrado al estilo tradicional cusqueño, suave y aromático.",
+      price: "S/ 5",
+      image: "https://picsum.photos/400/300?random=101",
+      customizationOptions: optCafe,
+    },
+    {
+      name: "Café Americano",
+      desc: "Espresso diluido en agua caliente, equilibrado e intenso.",
+      price: "S/ 6",
       tag: "Favorito",
-      image: "https://picsum.photos/400/300?random=1",
+      image: "https://picsum.photos/400/300?random=102",
+      customizationOptions: optCafe,
     },
     {
-      name: "Cappuccino Sarentina",
-      desc: "Espresso con leche vaporizada y arte latte especial de la casa.",
-      price: "S/ 12",
-      image: "https://picsum.photos/400/300?random=2",
-    },
-    {
-      name: "Cold Brew Andino",
-      desc: "Café frío de 24 horas de preparación, suave y refrescante.",
-      price: "S/ 14",
-      tag: "Nuevo",
-      image: "https://picsum.photos/400/300?random=3",
-    },
-    {
-      name: "Cortado de Altura",
-      desc: "Espresso con un toque de leche, equilibrado y reconfortante.",
-      price: "S/ 10",
-      image: "https://picsum.photos/400/300?random=4",
-    },
-    {
-      name: "Latte de Canela",
-      desc: "Espresso con leche y canela andina molida en el momento.",
-      price: "S/ 13",
-      image: "https://picsum.photos/400/300?random=5",
-    },
-    {
-      name: "Café Inca",
-      desc: "Mezcla secreta con cacao y maca andina, energizante natural.",
-      price: "S/ 15",
-      tag: "Especial",
-      image: "https://picsum.photos/400/300?random=6",
-    },
-  ],
-  bebidas: [
-    {
-      name: "Mate de Coca Premium",
-      desc: "Hojas seleccionadas de coca del Valle Sagrado, suave y auténtico.",
+      name: "Cappuccino",
+      desc: "Espresso con leche vaporizada y una generosa capa de espuma.",
       price: "S/ 7",
       tag: "Favorito",
-      image: "https://picsum.photos/400/300?random=7",
+      image: "https://picsum.photos/400/300?random=103",
+      customizationOptions: optCafe,
     },
     {
-      name: "Smoothie Andino",
-      desc: "Mezcla de frutas tropicales con maca y camu camu.",
-      price: "S/ 16",
-      image: "https://picsum.photos/400/300?random=8",
+      name: "Mocaccino",
+      desc: "Espresso con chocolate y leche vaporizada, perfecto equilibrio.",
+      price: "S/ 7",
+      image: "https://picsum.photos/400/300?random=104",
+      customizationOptions: optCafe,
     },
     {
-      name: "Limonada de Chincho",
-      desc: "Refrescante limonada con hierba andina chincho y menta.",
-      price: "S/ 10",
-      image: "https://picsum.photos/400/300?random=9",
+      name: "Café Latte",
+      desc: "Espresso con abundante leche cremosa y arte latte de la casa.",
+      price: "S/ 7",
+      image: "https://picsum.photos/400/300?random=105",
+      customizationOptions: optCafe,
     },
     {
-      name: "Chocolate Caliente",
-      desc: "Cacao puro de Cusco con especias andinas y leche entera.",
-      price: "S/ 14",
-      tag: "Nuevo",
-      image: "https://picsum.photos/400/300?random=10",
-    },
-    {
-      name: "Infusión Serena",
-      desc: "Blend exclusivo de hierbas aromáticas del Cusco.",
-      price: "S/ 8",
-      image: "https://picsum.photos/400/300?random=11",
-    },
-    {
-      name: "Jugo de Maracuyá",
-      desc: "Maracuyá fresca licuada con un toque de jengibre y limón.",
-      price: "S/ 11",
-      image: "https://picsum.photos/400/300?random=12",
+      name: "Latte Macchiato",
+      desc: "Leche vaporizada con un toque de espresso al centro, suave y elegante.",
+      price: "S/ 7",
+      image: "https://picsum.photos/400/300?random=106",
+      customizationOptions: optCafe,
     },
   ],
-  pasteles: [
+
+  // ── Bebidas Calientes y Jugos ─────────────────────────────────────────────
+  bebidas: [
     {
-      name: "Torta de Quinoa",
-      desc: "Esponjosa torta de quinoa andina con frosting de crema chantilly.",
-      price: "S/ 16",
+      name: "Infusiones",
+      desc: "Selección de hierbas aromáticas del Valle Sagrado: manzanilla, menta, muña y más.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=201",
+      customizationOptions: optCaliente,
+    },
+    {
+      name: "Leche Fresca",
+      desc: "Leche entera fresca servida caliente, ideal para acompañar.",
+      price: "S/ 5",
+      image: "https://picsum.photos/400/300?random=202",
+      customizationOptions: optCaliente,
+    },
+    {
+      name: "Chocolate Pasta Pura",
+      desc: "Chocolate artesanal preparado con pasta de cacao puro, intenso y reconfortante.",
+      price: "S/ 6",
       tag: "Favorito",
-      image: "https://picsum.photos/400/300?random=13",
+      image: "https://picsum.photos/400/300?random=203",
+      customizationOptions: optCaliente,
     },
     {
-      name: "Cheesecake de Maracuyá",
-      desc: "Cremoso cheesecake con base de galleta y coulis de maracuyá.",
-      price: "S/ 14",
-      image: "https://picsum.photos/400/300?random=14",
+      name: "Chocolate con Leche",
+      desc: "Cacao puro mezclado con leche fresca, cremoso y cálido.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=204",
+      customizationOptions: optCaliente,
     },
     {
-      name: "Alfajores Cusqueños",
-      desc: "Delicados alfajores bañados en manjar blanco artesanal.",
-      price: "S/ 8",
-      image: "https://picsum.photos/400/300?random=15",
+      name: "Café con Leche",
+      desc: "Mezcla clásica de café fuerte con leche fresca caliente.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=205",
+      customizationOptions: optCaliente,
     },
     {
-      name: "Croissant de Maíz Morado",
-      desc: "Croissant hojaldrado con relleno de crema de maíz morado.",
-      price: "S/ 12",
-      tag: "Nuevo",
-      image: "https://picsum.photos/400/300?random=16",
+      name: "Jugo de Papaya",
+      desc: "Papaya fresca licuada al momento, natural y nutritiva.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=206",
+      customizationOptions: optJugo,
     },
     {
-      name: "Brownie de Cacao Andino",
-      desc: "Intenso brownie de cacao puro con nueces y sal de Maras.",
-      price: "S/ 10",
-      image: "https://picsum.photos/400/300?random=17",
+      name: "Jugo de Piña",
+      desc: "Piña fresca exprimida, refrescante y llena de vitamina C.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=207",
+      customizationOptions: optJugo,
     },
     {
-      name: "Muffin de Kiwicha",
-      desc: "Muffin saludable de kiwicha con frutos rojos del Valle Sagrado.",
-      price: "S/ 9",
-      tag: "Especial",
-      image: "https://picsum.photos/400/300?random=18",
+      name: "Jugo de Plátano",
+      desc: "Plátano de la región licuado con leche o agua, cremoso y energizante.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=208",
+      customizationOptions: optJugo,
+    },
+    {
+      name: "Jugo de Mango",
+      desc: "Mango maduro de temporada licuado al instante, dulce y tropical.",
+      price: "S/ 7",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=209",
+      customizationOptions: optJugo,
+    },
+    {
+      name: "Jugo de Fresa",
+      desc: "Fresas frescas licuadas, vibrantes y naturalmente dulces.",
+      price: "S/ 7",
+      image: "https://picsum.photos/400/300?random=210",
+      customizationOptions: optJugo,
     },
   ],
+
+  // ── Porciones de Torta ────────────────────────────────────────────────────
+  porciones: [
+    {
+      name: "Red Velvet",
+      desc: "Porción de torta red velvet con frosting de queso crema, suave y vistosa.",
+      price: "S/ 6",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=301",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Frutos Secos",
+      desc: "Porción de torta húmeda con mezcla de nueces, almendras y pasas.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=302",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Naranja",
+      desc: "Porción de bizcocho esponjoso de naranja con glaseado cítrico.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=303",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Chocolate",
+      desc: "Porción de torta de chocolate intenso con cobertura de ganache.",
+      price: "S/ 6",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=304",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Arco Iris",
+      desc: "Porción de torta multicolor con capas de bizcocho en distintos colores y crema.",
+      price: "S/ 7",
+      tag: "Especial",
+      image: "https://picsum.photos/400/300?random=305",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Vainilla",
+      desc: "Bizcocho empapado en tres leches con esencia de vainilla, jugoso y cremoso.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=306",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Chocolate",
+      desc: "Bizcocho empapado en tres leches con cacao, intenso y meloso.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=307",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Maracuyá",
+      desc: "Bizcocho empapado en tres leches con maracuyá, intenso y agridulce.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=307",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Lúcuma",
+      desc: "Bizcocho empapado en tres leches con lúcuma, intenso y dulce.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=307",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Moca",
+      desc: "Bizcocho tres leches con café moca, para los amantes del café.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=308",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Cereza",
+      desc: "Bizcocho tres leches con toque de cereza, fresco y delicado.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=309",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Tres Leches de Fresa",
+      desc: "Bizcocho tres leches con fresas frescas, dulce y afrutado.",
+      price: "S/ 6",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=310",
+      customizationOptions: optPorcion,
+    },
+    {
+      name: "Pionono",
+      desc: "Brazo de gitano enrollado con manjar blanco artesanal, clásico cusqueño.",
+      price: "S/ 4",
+      image: "https://picsum.photos/400/300?random=311",
+      customizationOptions: optPorcion,
+    },
+  ],
+
+  // ── Hojaldres, Pyes y Alfajores ───────────────────────────────────────────
+  hojaldres: [
+    {
+      name: "Lengua de Suegra",
+      desc: "Hojaldre crujiente enrollado y caramelizado, fino y delicioso.",
+      price: "S/ 3",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=401",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Cachito",
+      desc: "Hojaldre en forma de cuerno relleno de manjar blanco casero.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=402",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Strudel de Manzana",
+      desc: "Hojaldre enrollado con relleno de manzana canela y azúcar.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=403",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Voulevant",
+      desc: "Cesta de hojaldre crujiente rellena de crema pastelera.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=404",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Mil Hojas",
+      desc: "Capas de hojaldre hojaldrado intercaladas con crema chantilly y manjar.",
+      price: "S/ 4",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=405",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Cien Hojas",
+      desc: "Versión más compacta del mil hojas, igual de crujiente y cremoso.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=406",
+      customizationOptions: optHojaldre,
+    },
+    {
+      name: "Pye de Manzana",
+      desc: "Tarta de manzana horneada con canela y azúcar, crujiente por fuera y tierna por dentro.",
+      price: "S/ 6",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=407",
+      customizationOptions: optPye,
+    },
+    {
+      name: "Pye de Limón",
+      desc: "Tarta de crema de limón sobre base de hojaldre con merengue tostado.",
+      price: "S/ 6",
+      image: "https://picsum.photos/400/300?random=408",
+      customizationOptions: optPye,
+    },
+    {
+      name: "Mini Pye de Pecana",
+      desc: "Pequeña tarta de pecanas caramelizadas, crujiente y dulce.",
+      price: "S/ 8",
+      tag: "Especial",
+      image: "https://picsum.photos/400/300?random=409",
+      customizationOptions: optPye,
+    },
+    {
+      name: "Alfajor de Coco",
+      desc: "Alfajor de masa suave con manjar blanco artesanal y coco rallado.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=410",
+      customizationOptions: optAlfajor,
+    },
+    {
+      name: "Alfajor de Maní",
+      desc: "Alfajor crujiente con crema de maní y cobertura de azúcar glass.",
+      price: "S/ 3",
+      image: "https://picsum.photos/400/300?random=411",
+      customizationOptions: optAlfajor,
+    },
+  ],
+
+  // ── Empanadas ─────────────────────────────────────────────────────────────
   salados: [
     {
-      name: "Sándwich Andino",
-      desc: "Pan artesanal con queso andino, jamón serrano y rúcula fresca.",
-      price: "S/ 18",
+      name: "Empanada de Queso",
+      desc: "Empanada horneada rellena de queso andino fundido, dorada y crujiente.",
+      price: "S/ 4",
       tag: "Favorito",
-      image: "https://picsum.photos/400/300?random=19",
+      image: "https://picsum.photos/400/300?random=501",
+      customizationOptions: optEmpanada,
     },
     {
-      name: "Tostadas de Palta",
-      desc: "Pan de masa madre con palta de la región y huevo pochado.",
-      price: "S/ 16",
-      image: "https://picsum.photos/400/300?random=20",
+      name: "Empanada Mixta",
+      desc: "Empanada con relleno de queso andino, jamón y vegetales.",
+      price: "S/ 4",
+      image: "https://picsum.photos/400/300?random=502",
+      customizationOptions: optEmpanada,
     },
     {
-      name: "Quiche de Choclo",
-      desc: "Quiche artesanal con choclo cusqueño, queso y hierbas finas.",
-      price: "S/ 14",
-      image: "https://picsum.photos/400/300?random=21",
+      name: "Empanada de Pollo",
+      desc: "Empanada horneada con relleno jugoso de pollo al ajillo y especias.",
+      price: "S/ 5",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=503",
+      customizationOptions: optEmpanada,
     },
     {
-      name: "Empanadas Sarentina",
-      desc: "Empanadas horneadas rellenas de queso andino y ají amarillo.",
-      price: "S/ 10",
-      image: "https://picsum.photos/400/300?random=22",
+      name: "Empanada de Carne",
+      desc: "Empanada de masa crujiente con relleno de carne molida sazonada.",
+      price: "S/ 5",
+      image: "https://picsum.photos/400/300?random=504",
+      customizationOptions: optEmpanada,
+    },
+  ],
+
+  // ── Tortas Enteras ────────────────────────────────────────────────────────
+  tortas: [
+    {
+      name: "Red Velvet",
+      desc: "Torta completa red velvet con frosting de queso crema. Disponible en 4 tamaños. Pedido con anticipación.",
+      price: "S/ 30",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=601",
+      sizes: [
+        { label: "8 porciones", price: "S/ 30" },
+        { label: "12 porciones", price: "S/ 40" },
+        { label: "16 porciones", price: "S/ 55" },
+        { label: "32 porciones", price: "S/ 70" },
+      ],
+      customizationOptions: optTorta,
     },
     {
-      name: "Bowl de Quinoa",
-      desc: "Quinoa cocida con vegetales asados, huevo y aderezo de la casa.",
-      price: "S/ 20",
-      tag: "Nuevo",
-      image: "https://picsum.photos/400/300?random=23",
+      name: "Frutos Secos",
+      desc: "Torta completa con mezcla de nueces, almendras y pasas. Pedido con anticipación.",
+      price: "S/ 30",
+      image: "https://picsum.photos/400/300?random=602",
+      sizes: [
+        { label: "8 porciones", price: "S/ 30" },
+        { label: "12 porciones", price: "S/ 40" },
+        { label: "16 porciones", price: "S/ 55" },
+        { label: "32 porciones", price: "S/ 70" },
+      ],
+      customizationOptions: optTorta,
     },
     {
-      name: "Croissant Salado",
-      desc: "Croissant relleno de jamón, queso Edam y mostaza artesanal.",
-      price: "S/ 13",
-      image: "https://picsum.photos/400/300?random=24",
+      name: "Naranja",
+      desc: "Torta completa de bizcocho de naranja con glaseado cítrico. Pedido con anticipación.",
+      price: "S/ 30",
+      image: "https://picsum.photos/400/300?random=603",
+      sizes: [
+        { label: "8 porciones", price: "S/ 30" },
+        { label: "12 porciones", price: "S/ 40" },
+        { label: "16 porciones", price: "S/ 55" },
+        { label: "32 porciones", price: "S/ 70" },
+      ],
+      customizationOptions: optTorta,
+    },
+    {
+      name: "Chocolate",
+      desc: "Torta completa de chocolate intenso con cobertura de ganache. Pedido con anticipación.",
+      price: "S/ 30",
+      tag: "Favorito",
+      image: "https://picsum.photos/400/300?random=604",
+      sizes: [
+        { label: "8 porciones", price: "S/ 30" },
+        { label: "12 porciones", price: "S/ 40" },
+        { label: "16 porciones", price: "S/ 55" },
+        { label: "32 porciones", price: "S/ 70" },
+      ],
+      customizationOptions: optTorta,
+    },
+    {
+      name: "Arco Iris",
+      desc: "Torta completa multicolor con capas de colores vibrantes. Pedido con anticipación.",
+      price: "S/ 30",
+      tag: "Especial",
+      image: "https://picsum.photos/400/300?random=605",
+      sizes: [
+        { label: "8 porciones", price: "S/ 30" },
+        { label: "12 porciones", price: "S/ 40" },
+        { label: "16 porciones", price: "S/ 55" },
+        { label: "32 porciones", price: "S/ 70" },
+      ],
+      customizationOptions: optTorta,
+    },
+    {
+      name: "Torta Tres Leches",
+      desc: "Torta completa tres leches. Disponible en: Vainilla, Chocolate, Moca, Cereza o Fresa. Pedido con anticipación.",
+      price: "S/ 45",
+      image: "https://picsum.photos/400/300?random=606",
+      customizationOptions: [
+        "Sabor: Vainilla",
+        "Sabor: Chocolate",
+        "Sabor: Moca",
+        "Sabor: Maracuya",
+        "Sabor: Fresa",
+        "Con dedicatoria",
+        "Para llevar",
+        "Con cubiertos",
+      ],
     },
   ],
 };
 
-/** Fotos de los productos más vendidos para el carrusel */
+/** Fotos destacadas para el carrusel */
 const featuredImages = [
-  { src: "https://picsum.photos/1200/400?random=1",  alt: "Espresso Andino" },
-  { src: "https://picsum.photos/1200/400?random=13", alt: "Torta de Quinoa" },
-  { src: "https://picsum.photos/1200/400?random=7",  alt: "Mate de Coca Premium" },
-  { src: "https://picsum.photos/1200/400?random=19", alt: "Sándwich Andino" },
-  { src: "https://picsum.photos/1200/400?random=6",  alt: "Café Inca" },
-  { src: "https://picsum.photos/1200/400?random=14", alt: "Cheesecake de Maracuyá" },
+  { src: "https://picsum.photos/1200/400?random=301", alt: "Red Velvet" },
+  { src: "https://picsum.photos/1200/400?random=103", alt: "Cappuccino" },
+  { src: "https://picsum.photos/1200/400?random=405", alt: "Mil Hojas" },
+  {
+    src: "https://picsum.photos/1200/400?random=503",
+    alt: "Empanada de Pollo",
+  },
+  { src: "https://picsum.photos/1200/400?random=601", alt: "Torta Red Velvet" },
+  {
+    src: "https://picsum.photos/1200/400?random=203",
+    alt: "Chocolate Pasta Pura",
+  },
 ];
 
 const tagColors: Record<string, string> = {
@@ -197,7 +498,7 @@ const tagColors: Record<string, string> = {
 
 type MenuItemWithCategory = MenuItem & { category: Category };
 
-// All items flattened for search
+// Todos los items aplanados para búsqueda
 const allItems: MenuItemWithCategory[] = (
   Object.entries(menuItems) as [Category, MenuItem[]][]
 ).flatMap(([category, items]) => items.map((item) => ({ ...item, category })));
@@ -213,9 +514,11 @@ export default function Menu() {
     ? allItems.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
       )
-    : menuItems[activeCategory].map((item) => ({ ...item, category: activeCategory }));
+    : menuItems[activeCategory].map((item) => ({
+        ...item,
+        category: activeCategory,
+      }));
 
-  // Icon for a given category
   const categoryIcon = (cat: Category) =>
     categories.find((c) => c.id === cat)?.icon ?? Coffee;
 
@@ -357,9 +660,16 @@ export default function Menu() {
                   </p>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-[#C8A96E]">
-                      {item.price}
-                    </span>
+                    <div>
+                      <span className="text-lg font-bold text-[#C8A96E]">
+                        {item.price}
+                      </span>
+                      {item.sizes && item.sizes.length > 0 && (
+                        <span className="text-xs text-[#6B3A2A]/40 ml-1">
+                          desde
+                        </span>
+                      )}
+                    </div>
                     <span className="text-xs text-[#6B3A2A]/50 group-hover:text-[#C8A96E] transition-colors font-medium">
                       Ver opciones →
                     </span>
@@ -384,12 +694,14 @@ export default function Menu() {
         </div>
       </div>
 
-      {/* Product Modal */}
-      <ProductModal
-        item={selectedItem!}
-        isOpen={!!selectedItem}
-        onClose={() => setSelectedItem(null)}
-      />
+      {/* Product Modal — solo se monta cuando hay un item seleccionado */}
+      {selectedItem && (
+        <ProductModal
+          item={selectedItem}
+          isOpen={true}
+          onClose={() => setSelectedItem(null)}
+        />
+      )}
     </section>
   );
 }

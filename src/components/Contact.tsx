@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { MapPin, Clock, Phone, Mail, Coffee, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Phone, Mail, ExternalLink } from "lucide-react";
+import CustomCakeDesigner from "@/components/CustomCakeDesigner";
 
 const InstagramIcon = () => (
   <svg
@@ -39,21 +39,6 @@ const branches = [
 ];
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    date: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setFormData({ name: "", email: "", date: "", message: "" });
-  };
-
   return (
     <section id="contacto" className="py-24 bg-[#FBF8F3]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -162,7 +147,6 @@ export default function Contact() {
                 loading="lazy"
                 allowFullScreen
               />
-              {/* Info bar */}
               <div className="bg-white px-4 py-3 flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-[#1C1008] truncate">
@@ -208,103 +192,8 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Formulario de reserva */}
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-[#C8A96E]/15">
-            <h3 className="text-2xl font-serif font-bold text-[#1C1008] mb-2">
-              Reserva una mesa
-            </h3>
-            <p className="text-[#6B3A2A]/50 text-sm mb-8">
-              Asegura tu lugar especial en La Sarentina
-            </p>
-
-            {submitted ? (
-              <div className="text-center py-12">
-                <Coffee className="w-12 h-12 mx-auto mb-4 text-[#C8A96E]" />
-                <h4 className="text-xl font-bold text-[#1C1008] mb-2">
-                  ¡Reserva recibida!
-                </h4>
-                <p className="text-[#6B3A2A]/60 text-sm">
-                  Te contactaremos pronto para confirmar. ¡Te esperamos!
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-medium text-[#1C1008] mb-1.5">
-                      Nombre completo
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      placeholder="Tu nombre"
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#C8A96E]/20 focus:border-[#C8A96E] focus:outline-none focus:ring-2 focus:ring-[#C8A96E]/10 text-sm text-[#1C1008] bg-[#FBF8F3] transition-all placeholder:text-[#6B3A2A]/30"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-[#1C1008] mb-1.5">
-                      Correo electrónico
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      placeholder="tu@email.com"
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#C8A96E]/20 focus:border-[#C8A96E] focus:outline-none focus:ring-2 focus:ring-[#C8A96E]/10 text-sm text-[#1C1008] bg-[#FBF8F3] transition-all placeholder:text-[#6B3A2A]/30"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#1C1008] mb-1.5">
-                    Fecha y hora
-                  </label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={formData.date}
-                    onChange={(e) =>
-                      setFormData({ ...formData, date: e.target.value })
-                    }
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#C8A96E]/20 focus:border-[#C8A96E] focus:outline-none focus:ring-2 focus:ring-[#C8A96E]/10 text-sm text-[#1C1008] bg-[#FBF8F3] transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#1C1008] mb-1.5">
-                    Mensaje (opcional)
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                    placeholder="¿Alguna ocasión especial o petición?"
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#C8A96E]/20 focus:border-[#C8A96E] focus:outline-none focus:ring-2 focus:ring-[#C8A96E]/10 text-sm text-[#1C1008] bg-[#FBF8F3] transition-all placeholder:text-[#6B3A2A]/30 resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 bg-[#1C1008] text-[#C8A96E] rounded-xl font-semibold text-base hover:bg-[#3D1F0D] transition-colors tracking-wide"
-                >
-                  Confirmar Reserva
-                </button>
-
-                <p className="text-center text-xs text-[#6B3A2A]/40">
-                  Te confirmaremos tu reserva en menos de 24 horas
-                </p>
-              </form>
-            )}
-          </div>
+          {/* Diseñador de tortas personalizado */}
+          <CustomCakeDesigner />
         </div>
       </div>
     </section>

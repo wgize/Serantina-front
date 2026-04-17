@@ -4,14 +4,21 @@ import { useCart } from "@/hooks/useCart";
 import { ProductModal } from "@/components/ProductModal";
 import type { CartItem } from "@/types/cart";
 
+const parsePrice = (price: string) =>
+  parseFloat(price.replace("S/ ", "").replace(",", "."));
+
 export const Cart: React.FC = () => {
   const { state, dispatch } = useCart();
   const [editingItem, setEditingItem] = useState<CartItem | null>(null);
 
   const total = state.items.reduce((sum: number, item: CartItem) => {
-    const price = parseFloat(item.price.replace("S/ ", ""));
-    return sum + price * item.quantity;
+    return sum + parsePrice(item.price) * item.quantity;
   }, 0);
+
+  const totalItems = state.items.reduce(
+    (sum: number, item: CartItem) => sum + item.quantity,
+    0,
+  );
 
   const handleReserve = () => {
     const message = generateWhatsAppMessage(state.items, total);
@@ -26,22 +33,28 @@ export const Cart: React.FC = () => {
     items: CartItem[],
     total: number,
   ): string => {
-    let message =
-      "¡Hola! Me gustaría reservar los siguientes productos de La Serantina:\n\n";
+    const sep = "----------------------------";
+    let message = "Hola! Quisiera hacer un pedido en *La Sarentina*:\n\n";
+    message += `${sep}\n`;
 
     items.forEach((item, index) => {
-      message += `${index + 1}. ${item.name}\n`;
+      const unitPrice = parsePrice(item.price);
+      const subtotal = unitPrice * item.quantity;
+      message += `*${index + 1}. ${item.name}*\n`;
       message += `   Cantidad: ${item.quantity}\n`;
       if (item.size) message += `   Tamaño: ${item.size}\n`;
       if (item.customizations && item.customizations.length > 0) {
-        message += `   Personalizaciones: ${item.customizations.join(", ")}\n`;
+        message += `   Extras: ${item.customizations.join(", ")}\n`;
       }
-      message += `   Precio: ${item.price}\n\n`;
+      message += `   Precio unitario: S/ ${unitPrice.toFixed(2)}\n`;
+      if (item.quantity > 1) {
+        message += `   Subtotal: S/ ${subtotal.toFixed(2)} (x${item.quantity})\n`;
+      }
+      message += `${sep}\n`;
     });
 
-    message += `Total: S/ ${total.toFixed(2)}\n\n`;
-    message +=
-      "¿Podrían confirmar la disponibilidad y coordinar la entrega/recogida?\n\n";
+    message += `\n*TOTAL: S/ ${total.toFixed(2)}* (${totalItems} producto${totalItems !== 1 ? "s" : ""})\n\n`;
+    message += "Podrian confirmar disponibilidad y coordinar la recogida?\n";
     message += "Gracias!";
 
     return message;
@@ -96,64 +109,91 @@ export const Cart: React.FC = () => {
               </div>
             ) : (
               <>
-                <div className="space-y-4 mb-6">
-                  {state.items.map((item: CartItem) => (
-                    <div
-                      key={item.id}
-                      className="flex gap-4 p-4 border border-gray-200 rounded-lg"
-                    >
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-medium text-[#1C1008]">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm text-[#6B3A2A]/60">
-                          Cantidad: {item.quantity}{" "}
-                          {item.size && `• ${item.size}`}
-                        </p>
-                        {item.customizations &&
-                          item.customizations.length > 0 && (
-                            <p className="text-xs text-[#6B3A2A]/50">
-                              {item.customizations.join(", ")}
-                            </p>
-                          )}
-                        <p className="font-medium text-[#C8A96E] mt-1">
-                          {item.price}
-                        </p>
+                <div className="space-y-3 mb-6">
+                  {state.items.map((item: CartItem) => {
+                    const unitPrice = parsePrice(item.price);
+                    const subtotal = unitPrice * item.quantity;
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex gap-3 p-4 bg-[#FBF8F3] border border-[#C8A96E]/10 rounded-xl"
+                      >
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-[#1C1008] text-sm leading-tight">
+                            {item.name}
+                          </h3>
+
+                          {/* Cantidad y tamaño */}
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-xs bg-[#1C1008]/5 text-[#6B3A2A] px-2 py-0.5 rounded-full font-medium">
+                              ×{item.quantity}
+                            </span>
+                            {item.size && (
+                              <span className="text-xs text-[#6B3A2A]/60">
+                                {item.size}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Personalizaciones */}
+                          {item.customizations &&
+                            item.customizations.length > 0 && (
+                              <p className="text-xs text-[#6B3A2A]/50 mt-1 truncate">
+                                {item.customizations.join(", ")}
+                              </p>
+                            )}
+
+                          {/* Precios */}
+                          <div className="flex items-center justify-between mt-2">
+                            <span className="text-xs text-[#6B3A2A]/50">
+                              S/ {unitPrice.toFixed(2)} c/u
+                            </span>
+                            <span className="text-sm font-bold text-[#C8A96E]">
+                              S/ {subtotal.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Acciones */}
+                        <div className="flex flex-col gap-1.5 flex-shrink-0">
+                          <button
+                            onClick={() => setEditingItem(item)}
+                            className="p-1.5 text-[#C8A96E] hover:bg-[#C8A96E]/10 rounded-lg transition-colors"
+                            title="Editar"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              dispatch({
+                                type: "REMOVE_ITEM",
+                                payload: item.id,
+                              })
+                            }
+                            className="p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex flex-col gap-2">
-                        {/* Editar → abre modal con opciones del producto */}
-                        <button
-                          onClick={() => setEditingItem(item)}
-                          className="p-1 text-[#C8A96E] hover:bg-[#C8A96E]/10 rounded"
-                          title="Editar"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        {/* Eliminar → quita solo este item */}
-                        <button
-                          onClick={() =>
-                            dispatch({ type: "REMOVE_ITEM", payload: item.id })
-                          }
-                          className="p-1 text-red-400 hover:bg-red-50 rounded"
-                          title="Eliminar"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Total */}
-                <div className="border-t pt-4 mb-6">
-                  <div className="flex justify-between items-center text-lg font-bold">
-                    <span>Total:</span>
-                    <span className="text-[#C8A96E]">
+                <div className="border-t border-[#C8A96E]/15 pt-4 mb-6">
+                  <div className="flex justify-between items-center text-xs text-[#6B3A2A]/50 mb-1">
+                    <span>{totalItems} producto{totalItems !== 1 ? "s" : ""}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-semibold text-[#1C1008]">Total</span>
+                    <span className="text-xl font-bold text-[#C8A96E]">
                       S/ {total.toFixed(2)}
                     </span>
                   </div>

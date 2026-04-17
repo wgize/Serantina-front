@@ -18,7 +18,7 @@ interface ProductCarouselProps {
  */
 export default function ProductCarousel({
   images,
-  intervalMs = 5000,
+  intervalMs = 3500,
   className = "",
 }: ProductCarouselProps) {
   const [current, setCurrent] = useState(0);
@@ -44,7 +44,7 @@ export default function ProductCarousel({
       setCurrent(index);
       startTimer();
     },
-    [startTimer]
+    [startTimer],
   );
 
   const prev = () => go((current - 1 + count) % count);
@@ -104,9 +104,7 @@ export default function ProductCarousel({
           <span
             key={i}
             className={`rounded-full transition-all duration-500 ${
-              i === current
-                ? "w-5 h-1 bg-[#C8A96E]/60"
-                : "w-1 h-1 bg-white/25"
+              i === current ? "w-5 h-1 bg-[#C8A96E]/60" : "w-1 h-1 bg-white/25"
             }`}
           />
         ))}

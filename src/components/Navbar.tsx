@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Coffee, ShoppingCart, Search } from "lucide-react";
+import { Menu, X, ShoppingCart, Search } from "lucide-react";
+import heroImg from "@/assets/hero2.png";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
 import { useSearch } from "@/contexts/SearchContext";
@@ -78,10 +79,14 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a href="#inicio" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-full bg-[#C8A96E] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Coffee className="w-5 h-5 text-[#1C1008]" />
+            <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#C8A96E] group-hover:scale-110 transition-transform">
+              <img
+                src={heroImg}
+                alt="La Sarentina"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="text-[#C8A96E] font-bold text-xl tracking-wide font-serif">
+            <span className="text-[#C8A96E] font-bold text-base sm:text-xl tracking-wide font-serif whitespace-nowrap">
               La Sarentina
             </span>
           </a>
