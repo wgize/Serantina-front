@@ -15,13 +15,13 @@ const testimonials = [
     name: "María Elena Quispe",
     role: "Cusqueña, diseñadora",
     stars: 5,
-    text: "La Serantina es mi lugar favorito para trabajar y desconectarme. El café de altura es incomparable y el ambiente es simplemente mágico.",
+    text: "La Sarentina es mi lugar favorito para trabajar y desconectarme. El café de altura es incomparable y el ambiente es simplemente mágico.",
   },
   {
     name: "Carlos Mendoza",
     role: "Viajero, Buenos Aires",
     stars: 5,
-    text: "Vine al Cusco de vacaciones y descubrí La Serantina. La torta de quinoa y el Cold Brew Andino son de lo mejor que he probado en mi vida.",
+    text: "Vine al Cusco de vacaciones y descubrí La Sarentina. La torta de quinoa y el Cold Brew Andino son de lo mejor que he probado en mi vida.",
   },
   {
     name: "Ana Sofía Torres",

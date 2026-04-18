@@ -38,7 +38,7 @@ export default function Hero() {
         >
           La
           <br />
-          <span className="text-[#C8A96E] italic">Serantina</span>
+          <span className="text-[#C8A96E] italic">Sarentina</span>
         </h1>
 
         {/* Subtítulo */}

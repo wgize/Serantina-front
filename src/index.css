@@ -23,12 +23,12 @@
     --ring: 20 14.3% 4.1%;
     --radius: 0.5rem;
 
-    /* Colores personalizados La Serantina */
-    --serantina-brown: #6B3A2A;
-    --serantina-gold: #C8A96E;
-    --serantina-cream: #F5F0E8;
-    --serantina-dark: #1C1008;
-    --serantina-light: #FBF8F3;
+    /* Colores personalizados La Sarentina */
+    --sarentina-brown: #6B3A2A;
+    --sarentina-gold: #C8A96E;
+    --sarentina-cream: #F5F0E8;
+    --sarentina-dark: #1C1008;
+    --sarentina-light: #FBF8F3;
   }
 }
 

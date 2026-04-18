@@ -64,7 +64,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("laserantina-cart");
+    const savedCart = localStorage.getItem("lasarentina-cart");
     if (savedCart) {
       try {
         const items = JSON.parse(savedCart);
@@ -78,7 +78,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("laserantina-cart", JSON.stringify(state.items));
+    localStorage.setItem("lasarentina-cart", JSON.stringify(state.items));
   }, [state.items]);
 
   return (
